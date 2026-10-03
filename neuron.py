@@ -117,39 +117,103 @@ for learning_rate in learning_rates:
 
 
 
-# STEP 5: Automatic weight update
+# # STEP 5: Automatic weight update
+
+# learning_rate = 0.1
+# current_w2 = weights[1]
+
+# print("\n--- AUTOMATIC WEIGHT UPDATE ---")
+
+# for step in range(50):
+#     current_loss = calculate_loss(current_w2)
+
+#     h = 0.01
+#     new_loss = calculate_loss(current_w2 + h)
+
+#     derivative = (new_loss - current_loss) / h
+
+#     # Gradient descent
+#     current_w2 = current_w2 - learning_rate * derivative
+
+#     if (step + 1) % 10 == 0:
+#         print(
+#             "Step:", step + 1,
+#             "| Weight:", current_w2,
+#             "| Loss:", calculate_loss(current_w2)
+#         )
+
+
+# final_z = inputs[0] * weights[0] + current_w2 * inputs[1] + bias
+
+# final_prediction = 1 / (1 + math.exp(-final_z))
+
+# print("\n--- FINAL TRAINED RESULT ---")
+# print("Final weight:", current_w2)
+# print("Final weighted sum:", final_z)
+# print("Final prediction:", final_prediction)
+# print("Target:", target)
+# print("Final loss:", calculate_loss(current_w2))
+
+
+# STEP 5: Backpropagation with analytical gradients
 
 learning_rate = 0.1
 current_w2 = weights[1]
 
-print("\n--- AUTOMATIC WEIGHT UPDATE ---")
+print("\n--- BACKPROPAGATION TRAINING ---")
 
 for step in range(50):
-    current_loss = calculate_loss(current_w2)
 
-    h = 0.01
-    new_loss = calculate_loss(current_w2 + h)
+    # Forward propagation
+    z = (
+        inputs[0] * weights[0]
+        + inputs[1] * current_w2
+        + bias
+    )
 
-    derivative = (new_loss - current_loss) / h
+    prediction = 1 / (1 + math.exp(-z))
+
+    loss = (target - prediction) ** 2
+
+    # Backpropagation
+    dL_dprediction = 2 * (prediction - target)
+
+    dprediction_dz = prediction * (1 - prediction)
+
+    dz_dw2 = inputs[1]
+
+    gradient = (
+        dL_dprediction
+        * dprediction_dz
+        * dz_dw2
+    )
 
     # Gradient descent
-    current_w2 = current_w2 - learning_rate * derivative
+    current_w2 = current_w2 - learning_rate * gradient
 
     if (step + 1) % 10 == 0:
         print(
             "Step:", step + 1,
             "| Weight:", current_w2,
-            "| Loss:", calculate_loss(current_w2)
+            "| Loss:", loss
         )
 
 
-final_z = inputs[0] * weights[0] + current_w2 * inputs[1] + bias
+# Final result
+final_z = (
+    inputs[0] * weights[0]
+    + current_w2 * inputs[1]
+    + bias
+)
 
 final_prediction = 1 / (1 + math.exp(-final_z))
 
-print("\n--- FINAL TRAINED RESULT ---")
+final_loss = (target - final_prediction) ** 2
+
+print("\n--- FINAL BACKPROPAGATION RESULT ---")
 print("Final weight:", current_w2)
 print("Final weighted sum:", final_z)
 print("Final prediction:", final_prediction)
 print("Target:", target)
-print("Final loss:", calculate_loss(current_w2))
+print("Final loss:", final_loss)
+
