@@ -60,3 +60,21 @@ output = layer_forward(hidden, weights2, biases2)
 print("Hidden layer:", hidden)
 print("Final output:", output)
 
+
+def calculate_loss(predictions, targets):
+
+    total = 0
+
+    for i in range(len(predictions)):
+        total += (predictions[i] - targets[i]) ** 2
+
+    return total / len(predictions)
+
+
+target = [1.0, 0.0]
+
+loss = calculate_loss(output, target)
+
+print("Target:", target)
+print("Loss:", loss)
+
