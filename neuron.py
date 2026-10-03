@@ -155,21 +155,21 @@ for learning_rate in learning_rates:
 # print("Final loss:", calculate_loss(current_w2))
 
 
-# STEP 5: Backpropagation with analytical gradients
+
+# STEP 6: Training all weights and bias
 
 learning_rate = 0.1
-current_w2 = weights[1]
 
-print("\n--- BACKPROPAGATION TRAINING ---")
+w1 = weights[0]
+w2 = weights[1]
+b = bias
 
-for step in range(50):
+print("\n--- FULL NEURON TRAINING ---")
+
+for step in range(100):
 
     # Forward propagation
-    z = (
-        inputs[0] * weights[0]
-        + inputs[1] * current_w2
-        + bias
-    )
+    z = inputs[0] * w1 + inputs[1] * w2 + b
 
     prediction = 1 / (1 + math.exp(-z))
 
@@ -180,40 +180,29 @@ for step in range(50):
 
     dprediction_dz = prediction * (1 - prediction)
 
-    dz_dw2 = inputs[1]
+    dL_dz = dL_dprediction * dprediction_dz
 
-    gradient = (
-        dL_dprediction
-        * dprediction_dz
-        * dz_dw2
-    )
+    # Gradients for every parameter
+    dw1 = dL_dz * inputs[0]
+    dw2 = dL_dz * inputs[1]
+    db = dL_dz
 
-    # Gradient descent
-    current_w2 = current_w2 - learning_rate * gradient
+    # Update all parameters
+    w1 = w1 - learning_rate * dw1
+    w2 = w2 - learning_rate * dw2
+    b = b - learning_rate * db
 
-    if (step + 1) % 10 == 0:
+    if (step + 1) % 20 == 0:
         print(
             "Step:", step + 1,
-            "| Weight:", current_w2,
-            "| Loss:", loss
+            "| Loss:", loss,
+            "| Prediction:", prediction
         )
 
-
-# Final result
-final_z = (
-    inputs[0] * weights[0]
-    + current_w2 * inputs[1]
-    + bias
-)
-
-final_prediction = 1 / (1 + math.exp(-final_z))
-
-final_loss = (target - final_prediction) ** 2
-
-print("\n--- FINAL BACKPROPAGATION RESULT ---")
-print("Final weight:", current_w2)
-print("Final weighted sum:", final_z)
-print("Final prediction:", final_prediction)
+print("\n--- TRAINED PARAMETERS ---")
+print("Weight 1:", w1)
+print("Weight 2:", w2)
+print("Bias:", b)
+print("Final prediction:", prediction)
 print("Target:", target)
-print("Final loss:", final_loss)
 
