@@ -59,3 +59,4 @@ output = layer_forward(hidden, weights2, biases2)
 
 print("Hidden layer:", hidden)
 print("Final output:", output)
+
